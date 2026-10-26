@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { actions, CATEGORIES, categoryImage, money, useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/admin")({
@@ -20,7 +20,7 @@ function Admin() {
   const [tab, setTab] = useState<"orders" | "products">("orders");
   const revenue = orders.reduce((s, o) => s + o.total, 0);
 
-  function add(e: React.FormEvent<HTMLFormElement>) {
+  function add(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
     const f = new FormData(form);

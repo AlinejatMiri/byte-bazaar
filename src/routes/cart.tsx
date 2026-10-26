@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { actions, money, TAX_RATE, useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/cart")({
@@ -22,7 +22,7 @@ function Cart() {
   const subtotal = lines.reduce((s, l) => s + l.p.price * l.qty, 0);
   const tax = subtotal * TAX_RATE;
 
-  function submit(e: React.FormEvent<HTMLFormElement>) {
+  function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const f = new FormData(e.currentTarget);
     const order = actions.placeOrder({
