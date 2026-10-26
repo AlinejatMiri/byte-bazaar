@@ -3,8 +3,8 @@ import { CATEGORIES, useStore } from "@/lib/store";
 import { ProductCard } from "@/components/ProductCard";
 
 export const Route = createFileRoute("/products")({
-  validateSearch: (s: Record<string, unknown>): { category?: string } => ({
-    category: typeof s.category === "string" ? s.category : undefined,
+  validateSearch: (s: Record<string, unknown>): { category?: string | undefined } => ({
+    category: typeof s["category"] === "string" ? s["category"] : undefined,
   }),
   head: () => ({
     meta: [

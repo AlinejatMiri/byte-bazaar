@@ -28,11 +28,11 @@ function Admin() {
     const specs: Record<string, string> = {};
     String(f.get("specs")).split("\n").forEach((line) => {
       const [k, ...v] = line.split(":");
-      if (k.trim() && v.length) specs[k.trim()] = v.join(":").trim();
+      if (k && k.trim() && v.length) specs[k.trim()] = v.join(":").trim();
     });
     actions.addProduct({
       name: String(f.get("name")), category, price: Number(f.get("price")),
-      image: String(f.get("image")).trim() || categoryImage[category],
+      image: String(f.get("image")).trim() || categoryImage[category] || "",
       description: String(f.get("description")), specs,
     });
     form.reset();
