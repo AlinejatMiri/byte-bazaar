@@ -12,4 +12,6 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  // The Docker image runs Nitro's Node server output, not Vite's dev preview server.
+  nitro: { preset: "node-server" },
 });

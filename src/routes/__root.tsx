@@ -12,7 +12,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { useStore } from "@/lib/store";
+import { actions, useStore } from "@/lib/store";
 
 function NotFoundComponent() {
   return (
@@ -20,7 +20,9 @@ function NotFoundComponent() {
       <div>
         <h1 className="text-7xl font-bold">404</h1>
         <p className="mt-2 text-muted-foreground">Page not found.</p>
-        <Link to="/" className="btn mt-6">Go home</Link>
+        <Link to="/" className="btn mt-6">
+          Go home
+        </Link>
       </div>
     </div>
   );
@@ -35,7 +37,15 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
     <div className="flex min-h-[60vh] items-center justify-center px-4 text-center">
       <div>
         <h1 className="text-xl font-semibold">This page didn't load</h1>
-        <button className="btn mt-6" onClick={() => { router.invalidate(); reset(); }}>Try again</button>
+        <button
+          className="btn mt-6"
+          onClick={() => {
+            router.invalidate();
+            reset();
+          }}
+        >
+          Try again
+        </button>
       </div>
     </div>
   );
@@ -54,7 +64,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Sora:wght@600;700;800&display=swap" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Sora:wght@600;700;800&display=swap",
+      },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
   }),
@@ -67,24 +80,56 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <head><HeadContent /></head>
-      <body>{children}<Scripts /></body>
+      <head>
+        <HeadContent />
+      </head>
+      <body>
+        {children}
+        <Scripts />
+      </body>
     </html>
   );
 }
 
 function Header() {
-  const { cart } = useStore();
+  const { cart, authenticated, role } = useStore();
   const count = cart.reduce((s, c) => s + c.qty, 0);
   const nav = "text-sm font-semibold text-muted-foreground hover:text-primary";
   return (
     <header className="no-print sticky top-0 z-30 border-b bg-background/85 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
-        <Link to="/" className="font-display text-xl font-extrabold">Byte<span className="text-primary">Forge</span></Link>
+        <Link to="/" className="font-display text-xl font-extrabold">
+          Byte<span className="text-primary">Forge</span>
+        </Link>
         <nav className="flex items-center gap-4">
-          <Link to="/products" className={nav} activeProps={{ className: "text-primary" }}>Shop</Link>
-          <Link to="/admin" className={nav} activeProps={{ className: "text-primary" }}>Admin</Link>
-          <Link to="/cart" className="btn text-sm">Cart ({count})</Link>
+          <Link to="/products" className={nav} activeProps={{ className: "text-primary" }}>
+            Shop
+          </Link>
+          {(role === "ADMIN" || role === "STAFF") && (
+            <Link to="/admin" className={nav} activeProps={{ className: "text-primary" }}>
+              Admin
+            </Link>
+          )}
+          <Link to="/orders" className={nav} activeProps={{ className: "text-primary" }}>
+            Orders
+          </Link>
+          {(role === "ADMIN" || role === "STAFF") && (
+            <Link to="/branch-sale" className={nav} activeProps={{ className: "text-primary" }}>
+              Branch sale
+            </Link>
+          )}
+          {authenticated ? (
+            <button className={nav} onClick={() => actions.logout()}>
+              Sign out
+            </button>
+          ) : (
+            <Link to="/login" className={nav}>
+              Sign in
+            </Link>
+          )}
+          <Link to="/cart" className="btn text-sm">
+            Cart ({count})
+          </Link>
         </nav>
       </div>
     </header>
@@ -96,8 +141,12 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <Header />
-      <main className="min-h-[80vh]"><Outlet /></main>
-      <footer className="no-print border-t py-8 text-center text-sm text-muted-foreground">© 2026 ByteForge Computers</footer>
+      <main className="min-h-[80vh]">
+        <Outlet />
+      </main>
+      <footer className="no-print border-t py-8 text-center text-sm text-muted-foreground">
+        © 2026 ByteForge Computers
+      </footer>
     </QueryClientProvider>
   );
 }

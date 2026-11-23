@@ -47,6 +47,37 @@ function isH3SwallowedErrorBody(body: string): boolean {
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
+      const requestUrl = new URL(request.url);
+      if (requestUrl.pathname === "/api" || requestUrl.pathname.startsWith("/api/")) {
+        const upstream = process.env["API_UPSTREAM"] || "http://localhost:8080";
+        const target = new URL(`${requestUrl.pathname}${requestUrl.search}`, upstream);
+        const headers = new Headers(request.headers);
+        // These headers describe the browser-to-frontend connection and cannot be
+        // forwarded unchanged to Node's fetch implementation or the API server.
+        for (const header of [
+          "connection",
+          "content-length",
+          "expect",
+          "host",
+          "keep-alive",
+          "proxy-authenticate",
+          "proxy-authorization",
+          "te",
+          "trailer",
+          "transfer-encoding",
+          "upgrade",
+        ]) headers.delete(header);
+        const hasBody = request.method !== "GET" && request.method !== "HEAD";
+        const upstreamRequest: RequestInit = {
+          method: request.method,
+          headers,
+          redirect: "manual",
+        };
+        if (hasBody) upstreamRequest.body = await request.arrayBuffer();
+        const response = await fetch(target, upstreamRequest);
+        return response;
+      }
+
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
       return await normalizeCatastrophicSsrResponse(response);

@@ -11,7 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as BranchSaleRouteImport } from './routes/branch-sale'
 import { Route as CartRouteImport } from './routes/cart'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as ProductsRouteImport } from './routes/products'
 import { Route as BillIdRouteImport } from './routes/bill.$id'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
@@ -26,9 +29,24 @@ const AdminRoute = AdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BranchSaleRoute = BranchSaleRouteImport.update({
+  id: '/branch-sale',
+  path: '/branch-sale',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CartRoute = CartRouteImport.update({
   id: '/cart',
   path: '/cart',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OrdersRoute = OrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProductsRoute = ProductsRouteImport.update({
@@ -50,7 +68,10 @@ const ProductIdRoute = ProductIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/branch-sale': typeof BranchSaleRoute
   '/cart': typeof CartRoute
+  '/login': typeof LoginRoute
+  '/orders': typeof OrdersRoute
   '/products': typeof ProductsRoute
   '/bill/$id': typeof BillIdRoute
   '/product/$id': typeof ProductIdRoute
@@ -58,7 +79,10 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/branch-sale': typeof BranchSaleRoute
   '/cart': typeof CartRoute
+  '/login': typeof LoginRoute
+  '/orders': typeof OrdersRoute
   '/products': typeof ProductsRoute
   '/bill/$id': typeof BillIdRoute
   '/product/$id': typeof ProductIdRoute
@@ -67,7 +91,10 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/branch-sale': typeof BranchSaleRoute
   '/cart': typeof CartRoute
+  '/login': typeof LoginRoute
+  '/orders': typeof OrdersRoute
   '/products': typeof ProductsRoute
   '/bill/$id': typeof BillIdRoute
   '/product/$id': typeof ProductIdRoute
@@ -75,14 +102,34 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/admin' | '/cart' | '/products' | '/bill/$id' | '/product/$id'
+    | '/'
+    | '/admin'
+    | '/branch-sale'
+    | '/cart'
+    | '/login'
+    | '/orders'
+    | '/products'
+    | '/bill/$id'
+    | '/product/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/cart' | '/products' | '/bill/$id' | '/product/$id'
+  to:
+    | '/'
+    | '/admin'
+    | '/branch-sale'
+    | '/cart'
+    | '/login'
+    | '/orders'
+    | '/products'
+    | '/bill/$id'
+    | '/product/$id'
   id:
     | '__root__'
     | '/'
     | '/admin'
+    | '/branch-sale'
     | '/cart'
+    | '/login'
+    | '/orders'
     | '/products'
     | '/bill/$id'
     | '/product/$id'
@@ -91,7 +138,10 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
+  BranchSaleRoute: typeof BranchSaleRoute
   CartRoute: typeof CartRoute
+  LoginRoute: typeof LoginRoute
+  OrdersRoute: typeof OrdersRoute
   ProductsRoute: typeof ProductsRoute
   BillIdRoute: typeof BillIdRoute
   ProductIdRoute: typeof ProductIdRoute
@@ -113,11 +163,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/branch-sale': {
+      id: '/branch-sale'
+      path: '/branch-sale'
+      fullPath: '/branch-sale'
+      preLoaderRoute: typeof BranchSaleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/cart': {
       id: '/cart'
       path: '/cart'
       fullPath: '/cart'
       preLoaderRoute: typeof CartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/orders': {
+      id: '/orders'
+      path: '/orders'
+      fullPath: '/orders'
+      preLoaderRoute: typeof OrdersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/products': {
@@ -147,7 +218,10 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
+  BranchSaleRoute: BranchSaleRoute,
   CartRoute: CartRoute,
+  LoginRoute: LoginRoute,
+  OrdersRoute: OrdersRoute,
   ProductsRoute: ProductsRoute,
   BillIdRoute: BillIdRoute,
   ProductIdRoute: ProductIdRoute,

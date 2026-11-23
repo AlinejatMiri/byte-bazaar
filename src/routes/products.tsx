@@ -19,7 +19,7 @@ export const Route = createFileRoute("/products")({
 
 function Products() {
   const { category } = Route.useSearch();
-  const { products } = useStore();
+  const { products, productsLoading, productsError } = useStore();
   const list = category ? products.filter((p) => p.category === category) : products;
   const chip = (active: boolean) => `rounded-full border px-4 py-1.5 text-sm font-semibold ${active ? "border-primary bg-primary text-primary-foreground" : "hover:border-primary"}`;
   return (
@@ -30,9 +30,17 @@ function Products() {
         {CATEGORIES.map((c) => <Link key={c} to="/products" search={{ category: c }} className={chip(category === c)}>{c}</Link>)}
       </div>
       <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {productsLoading && <p className="text-muted-foreground">Loading products…</p>}
+        {productsError && (
+          <p role="alert" className="text-destructive">
+            {productsError}
+          </p>
+        )}
         {list.map((p) => <ProductCard key={p.id} p={p} />)}
       </div>
-      {list.length === 0 && <p className="mt-8 text-muted-foreground">No products in this category yet.</p>}
+      {!productsLoading && !productsError && list.length === 0 && (
+        <p className="mt-8 text-muted-foreground">No products in this category yet.</p>
+      )}
     </div>
   );
 }

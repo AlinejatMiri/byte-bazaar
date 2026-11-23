@@ -28,7 +28,7 @@ const slides = [
 
 function Index() {
   const [i, setI] = useState(0);
-  const { products } = useStore();
+  const { products, productsLoading, productsError } = useStore();
   useEffect(() => {
     const t = setInterval(() => setI((x) => (x + 1) % slides.length), 5000);
     return () => clearInterval(t);
@@ -75,7 +75,16 @@ function Index() {
           <Link to="/products" className="text-sm font-semibold text-primary">View all →</Link>
         </div>
         <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {productsLoading && <p className="text-muted-foreground">Loading products…</p>}
+          {productsError && (
+            <p role="alert" className="text-destructive">
+              {productsError}
+            </p>
+          )}
           {products.slice(0, 8).map((p) => <ProductCard key={p.id} p={p} />)}
+          {!productsLoading && !productsError && products.length === 0 && (
+            <p className="text-muted-foreground">No products are available yet.</p>
+          )}
         </div>
       </section>
     </div>
